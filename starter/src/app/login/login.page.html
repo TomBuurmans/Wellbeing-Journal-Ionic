@@ -1,0 +1,11 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <h1>What is your name?</h1>
+  <ion-input placeholder="Enter Name" [(ngModel)]="name"></ion-input>
+  <ion-button (click)="submitName()" expand="block">ENTER</ion-button>
+</ion-content>
