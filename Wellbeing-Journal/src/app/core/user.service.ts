@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
+import { IonItem } from '@ionic/angular';
 
 @Injectable()
 export class UserService {
@@ -30,8 +31,7 @@ export class UserService {
     return new Promise<any>((resolve, reject) => {
       const user = firebase.auth().currentUser;
       user.updateProfile({
-        displayName: value.name,
-        photoURL: user.photoURL
+        displayName: value.name
       }).then(res => {
         resolve(res);
       }, err => reject(err));

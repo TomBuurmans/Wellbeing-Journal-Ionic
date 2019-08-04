@@ -20,7 +20,7 @@ export class UserComponent implements OnInit{
     public userService: UserService,
     public authService: AuthService,
     private route: ActivatedRoute,
-    private location : Location,
+    private location: Location,
     private fb: FormBuilder
   ) {
 
@@ -28,33 +28,34 @@ export class UserComponent implements OnInit{
 
   ngOnInit(): void {
     this.route.data.subscribe(routeData => {
-      let data = routeData['data'];
+      const data = routeData.data;
       if (data) {
         this.user = data;
-        this.createForm(this.user.name);
+        console.log(this.user.provider);
+        // this.createForm(this.user.name);
       }
-    })
-  }
-
-  createForm(name) {
-    this.profileForm = this.fb.group({
-      name: [name, Validators.required ]
     });
   }
 
-  save(value){
-    this.userService.updateCurrentUser(value)
-    .then(res => {
-      console.log(res);
-    }, err => console.log(err))
-  }
+  // createForm(name) {
+  //   this.profileForm = this.fb.group({
+  //     name: [name, Validators.required ]
+  //   });
+  // }
 
-  logout(){
+  // save(value) {
+  //   this.userService.updateCurrentUser(value)
+  //   .then(res => {
+  //     console.log(res);
+  //   }, err => console.log(err));
+  // }
+
+  logout() {
     this.authService.doLogout()
     .then((res) => {
       this.location.back();
     }, (error) => {
-      console.log("Logout error", error);
+      console.log('Logout error', error);
     });
   }
 }
