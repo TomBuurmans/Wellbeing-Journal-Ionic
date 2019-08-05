@@ -11,10 +11,10 @@
   
   <ion-content>
     <ion-list>
-      <ion-item *ngFor="let item of items">
-        {{item.title}}
+      <ion-item *ngFor="let item of logs">
+        {{item.date}}
         <div class="item-note" slot="end">
-          {{item.note}}
+          {{item.notes}}
         </div>
       </ion-item>
     </ion-list>
@@ -23,4 +23,9 @@
         You navigated here from <b>{{selectedItem.title }}</b>
       </div>
     -->
+    <ion-fab horizontal="end" vertical="bottom" slot="fixed">
+      <ion-fab-button color="danger" href="/newlog">
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
   </ion-content>

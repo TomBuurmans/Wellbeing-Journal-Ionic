@@ -38,7 +38,7 @@ export class LoginComponent {
   tryLogin(value) {
     this.authService.doLogin(value)
     .then(res => {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/user']);
     }, err => {
       console.log(err);
       this.errorMessage = err.message;

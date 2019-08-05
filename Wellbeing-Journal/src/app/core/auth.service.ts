@@ -37,6 +37,7 @@ export class AuthService {
         this.db.collection('users').doc(user.uid).set({
           name: value.name
         });
+        this.db.collection('users').doc(user.uid).collection('logs');
       }, err => reject(err));
     });
   }

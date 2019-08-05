@@ -1,0 +1,107 @@
+<h1>New Daily Entry</h1>
+<!-- <form [formGroup]="logForm" (ngSubmit)="addLog(logForm.value)"> -->
+<form [formGroup]="logForm">
+  <ion-item>
+    <ion-label>Anger</ion-label>
+    <ion-select formControlName="anger">
+      <ion-select-option value=1>1</ion-select-option>
+      <ion-select-option value=2>2</ion-select-option>
+      <ion-select-option value=3>3</ion-select-option>
+      <ion-select-option value=4>4</ion-select-option>
+      <ion-select-option value=5>5</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item>
+    <ion-label>Disgust</ion-label>
+    <ion-select formControlName="disgust">
+      <ion-select-option value=1>1</ion-select-option>
+      <ion-select-option value=2>2</ion-select-option>
+      <ion-select-option value=3>3</ion-select-option>
+      <ion-select-option value=4>4</ion-select-option>
+      <ion-select-option value=5>5</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item>
+    <ion-label>Fear</ion-label>
+    <ion-select formControlName="fear">
+      <ion-select-option value=1>1</ion-select-option>
+      <ion-select-option value=2>2</ion-select-option>
+      <ion-select-option value=3>3</ion-select-option>
+      <ion-select-option value=4>4</ion-select-option>
+      <ion-select-option value=5>5</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item>
+    <ion-label>Joy</ion-label>
+    <ion-select formControlName="joy">
+      <ion-select-option value=1>1</ion-select-option>
+      <ion-select-option value=2>2</ion-select-option>
+      <ion-select-option value=3>3</ion-select-option>
+      <ion-select-option value=4>4</ion-select-option>
+      <ion-select-option value=5>5</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item>
+    <ion-label>Sadness</ion-label>
+    <ion-select formControlName="sadness">
+      <ion-select-option value=1>1</ion-select-option>
+      <ion-select-option value=2>2</ion-select-option>
+      <ion-select-option value=3>3</ion-select-option>
+      <ion-select-option value=4>4</ion-select-option>
+      <ion-select-option value=5>5</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <!-- <ion-item>
+    <ion-label>Surprise</ion-label>
+    <ion-select formControlName="surprise">
+      <ion-select-option value=1>1</ion-select-option>
+      <ion-select-option value=2>2</ion-select-option>
+      <ion-select-option value=3>3</ion-select-option>
+      <ion-select-option value=4>4</ion-select-option>
+      <ion-select-option value=5>5</ion-select-option>
+    </ion-select>
+  </ion-item> -->
+  <ion-segment formControlName="overall">
+    <ion-list-header>Overall</ion-list-header>
+    <ion-segment-button value=1>
+        <fa-icon [icon]="['far', 'smile']" [styles]="{'stroke': 'red', 'color': 'green'}" size="2x"></fa-icon>
+    </ion-segment-button>
+    <ion-segment-button value=2>
+        <fa-icon [icon]="['far', 'meh']" [styles]="{'stroke': 'red', 'color': 'orange'}" size="2x"></fa-icon>
+    </ion-segment-button>
+    <ion-segment-button value=3>
+        <fa-icon [icon]="['far', 'frown']" [styles]="{'stroke': 'red', 'color': 'red'}" size="2x"></fa-icon>
+    </ion-segment-button>
+  </ion-segment>
+  <ion-segment formControlName="use">
+    <ion-list-header>Substance use</ion-list-header>
+    <ion-segment-button value=true>
+        <ion-icon name="checkmark-circle"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value=false>
+        <ion-icon name="close-circle"></ion-icon>
+    </ion-segment-button>
+  </ion-segment>
+  <ion-item>
+    <ion-label>Notes</ion-label>
+    <ion-textarea formControlName="notes" name="notes"></ion-textarea>
+  </ion-item>
+  <ion-button expand="block" type="submit" [formGroup]="logForm" block>Add Log</ion-button>
+  
+</form>
+<!-- <div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <form class="container" [formGroup]="logForm">
+      <div class="form-group">
+        <label>Emotions:</label>
+        <label>Anger:</label>
+        <input type="email" formControlName="email" class="form-control">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" class="form-control" formControlName="password">
+      </div>
+      <button type="submit" (click)="addLog(logForm.value)" class="btn btn-default">Submit</button>
+    </form>
+  </div>
+</div> -->
