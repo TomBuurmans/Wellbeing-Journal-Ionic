@@ -79,8 +79,8 @@ export class NewlogPage implements OnInit {
                   text: 'Cancel',
                   role: 'cancel',
                   cssClass: 'secondary',
-                  handler: (blah) => {
-                    console.log('Confirm Cancel: blah');
+                  handler: () => {
+                    console.log('Cancel');
                   }
                 }, {
                   text: 'Okay',

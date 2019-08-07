@@ -9,6 +9,7 @@ import { FirebaseUserModel } from '../core/user.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'page-user',
@@ -31,12 +32,37 @@ export class UserComponent implements OnInit {
     private router: Router,
     public afAuth: AngularFireAuth,
     public db: AngularFirestore,
-    private elRef: ElementRef
+    private elRef: ElementRef,
+    private alertController: AlertController
   ) {
 
   }
 
+  async confirmAlert() {
+    const alert = await this.alertController.create({
+      header: 'Caution',
+      message: 'This will delete all of your log entries',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel');
+          }
+        }, {
+          text: 'DELETE DATA',
+          handler: () => {
+            console.log('Confirm');
+            this.deleteData();
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+
   deleteData() {
+    console.log('Deleting data');
     const userDoc = this.db.firestore.collection('users').doc(this.userId).collection('logs');
     userDoc.get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {

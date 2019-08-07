@@ -22,7 +22,7 @@
         <div *ngIf='user.provider == "password"'class="card-body">
           <h4 class="card-title">{{user.name}}</h4>
           <ion-item>
-            <ion-button (click)="deleteData()" color="danger" expand="block">DELETE ACCOUNT DATA</ion-button>
+            <ion-button (click)="confirmAlert()" color="danger" expand="block">DELETE ACCOUNT DATA</ion-button>
           </ion-item>
         </div>
       </div>
