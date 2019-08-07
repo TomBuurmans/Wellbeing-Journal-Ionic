@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { UserService } from '../core/user.service';
 import { AuthService } from '../core/auth.service';
 import { ActivatedRoute } from '@angular/router';
@@ -15,8 +15,9 @@ import * as firebase from 'firebase/app';
   templateUrl: 'user.component.html',
   styleUrls: ['user.scss']
 })
-export class UserComponent implements OnInit{
+export class UserComponent implements OnInit {
 
+  @ViewChild('delete', { read: ElementRef }) searchElementRef: ElementRef;
   user: FirebaseUserModel = new FirebaseUserModel();
   profileForm: FormGroup;
   userId;
@@ -29,9 +30,20 @@ export class UserComponent implements OnInit{
     private fb: FormBuilder,
     private router: Router,
     public afAuth: AngularFireAuth,
-    public db: AngularFirestore
+    public db: AngularFirestore,
+    private elRef: ElementRef
   ) {
 
+  }
+
+  deleteData() {
+    const userDoc = this.db.firestore.collection('users').doc(this.userId).collection('logs');
+    userDoc.get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          console.log(doc);
+          this.db.doc(doc.ref).delete();
+        });
+    });
   }
 
   ngOnInit(): void {
@@ -40,21 +52,8 @@ export class UserComponent implements OnInit{
       if (data) {
         this.user = data;
         // this.createForm(this.user.name);
-        const btn = document.getElementById('deleteData');
-        btn.addEventListener('click', () => {
-          this.afAuth.authState.subscribe( user => {
-            if (user) { this.userId = user.uid; }
-            console.log(this.userId);
-            console.log(this.db.collection('users').doc(this.userId).collection('logs').valueChanges());
-            const userDoc = this.db.firestore.collection('users').doc(this.userId).collection('logs');
-            let batch = this.db.batch();
-            userDoc.get().then((querySnapshot) => {
-              querySnapshot.forEach((doc) => {
-                doc.
-              });
-              document.getElementById('loading').style.display = 'none';
-            });
-          });
+        this.afAuth.authState.subscribe( user => {
+          if (user) { this.userId = user.uid; }
         });
       } else {
         this.router.navigate(['/login']);
