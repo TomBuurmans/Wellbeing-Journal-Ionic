@@ -14,39 +14,15 @@ import * as firebase from 'firebase/app';
 export class NewlogPage implements OnInit {
 
   logForm: FormGroup;
+  userId;
 
   constructor(private fb: FormBuilder,
               public db: AngularFirestore,
               public afAuth: AngularFireAuth,
               private router: Router,
-              public alertController: AlertController
+              private alertController: AlertController
     ) {
     this.createForm();
-  }
-
-  async presentAlertConfirm() {
-    const alert = await this.alertController.create({
-      header: 'Confirm!',
-      message: 'Message <strong>text</strong>!!!',
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: (blah) => {
-            console.log('Confirm Cancel: blah');
-          }
-        }, {
-          text: 'Okay',
-          handler: () => {
-            console.log('Confirm Okay');
-            this.addLog();
-          }
-        }
-      ]
-    });
-
-    await alert.present();
   }
 
   createForm() {
@@ -87,7 +63,41 @@ export class NewlogPage implements OnInit {
 
   ngOnInit() {
     const button = document.querySelector('ion-button');
-    button.addEventListener('click', this.presentAlertConfirm);
+    const btn = document.getElementById('submit');
+    btn.addEventListener('click', async () => {
+      this.afAuth.authState.subscribe(user => {
+        if (user) { this.userId = user.uid; }
+        const d = new Date();
+        const s = d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getFullYear();
+        const userDoc = this.db.firestore.collection('users').doc(this.userId).collection('logs').doc(s).get().then(async docSnapshot => {
+          if (docSnapshot.exists) {
+            const alert = await this.alertController.create({
+              header: 'Confirm',
+              message: 'You have already made a log for today, this new entry will overwrite it',
+              buttons: [
+                {
+                  text: 'Cancel',
+                  role: 'cancel',
+                  cssClass: 'secondary',
+                  handler: (blah) => {
+                    console.log('Confirm Cancel: blah');
+                  }
+                }, {
+                  text: 'Okay',
+                  handler: () => {
+                    console.log('Confirm Okay');
+                    this.addLog();
+                  }
+                }
+              ]
+            });
+            await alert.present();
+          } else {
+            this.addLog();
+          }
+        });
+        });
+    });
   }
 
 }

@@ -3,6 +3,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import { OverlayBaseController } from '@ionic/angular/dist/util/overlay';
+import { LoadingController } from '@ionic/angular';
 
 export interface Log {
   date: string;
@@ -28,7 +29,7 @@ export class LogsPage implements OnInit {
   private selectedItem: any;
   private userId;
   public logs: Array<Log> = [];
-  constructor(public db: AngularFirestore, public afAuth: AngularFireAuth) {
+  constructor(public db: AngularFirestore, public afAuth: AngularFireAuth, public loadingController: LoadingController) {
     afAuth.authState.subscribe( user => {
       if (user) { this.userId = user.uid; }
       console.log(this.userId);
@@ -51,6 +52,7 @@ export class LogsPage implements OnInit {
             substanceUse: doc.data().substanceUse
           });
         });
+        document.getElementById('loading').style.display = 'none';
       });
     });
     // for (let i = 1; i < 11; i++) {
