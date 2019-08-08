@@ -7,6 +7,18 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-
+<ion-content *ngIf="log">
+  <ion-item>
+    <ion-title>{{ log.date }}</ion-title>
+  </ion-item>
+  <ion-list>
+    <ion-item>Anger: {{ log.emotionLevel.anger }}</ion-item>
+    <ion-item>Disgust: {{ log.emotionLevel.disgust }}</ion-item>
+    <ion-item>Fear: {{ log.emotionLevel.fear }}</ion-item>
+    <ion-item>Joy: {{ log.emotionLevel.joy }}</ion-item>
+    <ion-item>Sadness: {{ log.emotionLevel.sadness }}</ion-item>
+  </ion-list>
+  <ion-item>Overall: </ion-item>
+  <ion-item>Substance Use: </ion-item>
+  <ion-item>Notes: {{ log.notes }}</ion-item>
 </ion-content>
