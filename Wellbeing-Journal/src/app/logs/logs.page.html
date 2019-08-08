@@ -10,11 +10,11 @@
   </ion-header>
   
   <ion-content>
-    <ion-item id="loading">
+    <ion-item #loading id="loading">
       <ion-spinner></ion-spinner>
     </ion-item>
     <ion-list>
-      <ion-item *ngFor="let item of logs">
+      <ion-item *ngFor="let item of logs" (click)="clickLog(item)">
         {{item.date}}
         <div class="item-note" slot="end">
           {{item.notes}}

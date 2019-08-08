@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import { OverlayBaseController } from '@ionic/angular/dist/util/overlay';
 import { LoadingController } from '@ionic/angular';
+import { Router, NavigationExtras } from '@angular/router';
 
 export interface Log {
   date: string;
@@ -26,11 +27,16 @@ export interface Log {
 })
 export class LogsPage implements OnInit {
 
+  @ViewChild('loading', { read: ElementRef }) searchElementRef: ElementRef;
   private selectedItem: any;
   private userId;
   public logs: Array<Log> = [];
-  constructor(public db: AngularFirestore, public afAuth: AngularFireAuth, public loadingController: LoadingController) {
-    afAuth.authState.subscribe( user => {
+  constructor(public db: AngularFirestore, public afAuth: AngularFireAuth, public loadingController: LoadingController,
+              private router: Router) {
+  }
+
+  ngAfterViewInit() {
+    this.afAuth.authState.subscribe( user => {
       if (user) { this.userId = user.uid; }
       console.log(this.userId);
       console.log(this.db.collection('users').doc(this.userId).collection('logs').valueChanges());
@@ -52,18 +58,22 @@ export class LogsPage implements OnInit {
             substanceUse: doc.data().substanceUse
           });
         });
-        document.getElementById('loading').style.display = 'none';
+        this.searchElementRef.nativeElement.style.display = 'none';
       });
     });
-    // for (let i = 1; i < 11; i++) {
-    //   this.items.push( {
-    //     title: 'Item ' + i,
-    //     note: 'This is item #' + i
-    //   });
-    // }
   }
 
   ngOnInit() {
+  }
+
+  clickLog(item) {
+    console.log(item);
+    const navigationExtras: NavigationExtras = {
+      state: {
+        log: item
+      }
+    };
+    this.router.navigate(['log'], navigationExtras);
   }
 
 }

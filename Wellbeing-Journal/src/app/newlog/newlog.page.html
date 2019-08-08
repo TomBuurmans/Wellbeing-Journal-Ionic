@@ -1,4 +1,12 @@
-<h1>New Daily Entry</h1>
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-back-button defaultHref="logs"></ion-back-button>
+        </ion-buttons>
+      <ion-title>Daily Entry</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
 <!-- <form [formGroup]="logForm" (ngSubmit)="addLog(logForm.value)"> -->
 <form [formGroup]="logForm">
   <ion-item>
@@ -86,7 +94,7 @@
     <ion-label>Notes</ion-label>
     <ion-textarea formControlName="notes" name="notes"></ion-textarea>
   </ion-item>
-  <ion-button id="submit" expand="block" type="submit" [formGroup]="logForm" block>Add Log</ion-button>
+  <ion-button id="submit" (click)="checkOverwriteAlert()" expand="block" type="submit" [formGroup]="logForm" block>Add Log</ion-button>
   
 </form>
 <!-- <div class="row">

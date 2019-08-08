@@ -22,6 +22,9 @@ export class NewlogPage implements OnInit {
               private router: Router,
               private alertController: AlertController
     ) {
+    this.afAuth.authState.subscribe(user => {
+      if (user) { this.userId = user.uid; }
+    });
     this.createForm();
   }
 
@@ -61,43 +64,39 @@ export class NewlogPage implements OnInit {
     this.router.navigate(['/logs']);
   }
 
-  ngOnInit() {
-    const button = document.querySelector('ion-button');
-    const btn = document.getElementById('submit');
-    btn.addEventListener('click', async () => {
-      this.afAuth.authState.subscribe(user => {
-        if (user) { this.userId = user.uid; }
-        const d = new Date();
-        const s = d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getFullYear();
-        const userDoc = this.db.firestore.collection('users').doc(this.userId).collection('logs').doc(s).get().then(async docSnapshot => {
-          if (docSnapshot.exists) {
-            const alert = await this.alertController.create({
-              header: 'Confirm',
-              message: 'You have already made a log for today, this new entry will overwrite it',
-              buttons: [
-                {
-                  text: 'Cancel',
-                  role: 'cancel',
-                  cssClass: 'secondary',
-                  handler: () => {
-                    console.log('Cancel');
-                  }
-                }, {
-                  text: 'Okay',
-                  handler: () => {
-                    console.log('Confirm Okay');
-                    this.addLog();
-                  }
-                }
-              ]
-            });
-            await alert.present();
-          } else {
-            this.addLog();
-          }
+  async checkOverwriteAlert() {
+    const d = new Date();
+    const s = d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getFullYear();
+    const userDoc = this.db.firestore.collection('users').doc(this.userId).collection('logs').doc(s).get().then(async docSnapshot => {
+      if (docSnapshot.exists) {
+        const alert = await this.alertController.create({
+          header: 'Confirm',
+          message: 'You have already made a log for today, this new entry will overwrite it',
+          buttons: [
+            {
+              text: 'Cancel',
+              role: 'cancel',
+              cssClass: 'secondary',
+              handler: () => {
+                console.log('Cancel');
+              }
+            }, {
+              text: 'Okay',
+              handler: () => {
+                console.log('Confirm Okay');
+                this.addLog();
+              }
+            }
+          ]
         });
-        });
+        await alert.present();
+      } else {
+        this.addLog();
+      }
     });
+  }
+
+  ngOnInit() {
   }
 
 }

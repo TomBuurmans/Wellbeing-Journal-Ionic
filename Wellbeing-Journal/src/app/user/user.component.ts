@@ -18,7 +18,6 @@ import { AlertController } from '@ionic/angular';
 })
 export class UserComponent implements OnInit {
 
-  @ViewChild('delete', { read: ElementRef }) searchElementRef: ElementRef;
   user: FirebaseUserModel = new FirebaseUserModel();
   profileForm: FormGroup;
   userId;
@@ -90,7 +89,7 @@ export class UserComponent implements OnInit {
   logout() {
     this.authService.doLogout()
     .then((res) => {
-      this.location.back();
+      this.router.navigate(['/login']);
     }, (error) => {
       console.log('Logout error', error);
     });
