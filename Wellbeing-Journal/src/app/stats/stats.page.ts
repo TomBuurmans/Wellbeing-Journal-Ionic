@@ -64,7 +64,7 @@ export class StatsPage implements AfterViewInit {
             substanceUse: doc.data().substanceUse
           });
           const date = doc.id.split('-');
-          if (!this.years.includes(date[2])) {
+          if (!this.years.includes(date[2]) && yearCount <= 3) {
             yearCount++;
             this.years.push(date[2]);
             this.monthlyLogCount[yearCount] = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
