@@ -18,7 +18,11 @@
     <ion-item>Joy: {{ log.emotionLevel.joy }}</ion-item>
     <ion-item>Sadness: {{ log.emotionLevel.sadness }}</ion-item>
   </ion-list>
-  <ion-item>Overall: </ion-item>
-  <ion-item>Substance Use: </ion-item>
+  <ion-item>Overall: {{ overallIconStyle }}
+    <fa-icon class="icon" [icon]=overallIcon size="2x"></fa-icon>
+  </ion-item>
+  <ion-item>Substance Use: 
+    <ion-icon [name]=substanceIcon></ion-icon>
+  </ion-item>
   <ion-item>Notes: {{ log.notes }}</ion-item>
 </ion-content>

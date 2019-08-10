@@ -19,6 +19,11 @@ export class AppComponent {
       title: 'Logs',
       url: '/logs',
       icon: 'list'
+    },
+    {
+      title: 'Stats',
+      url: '/stats',
+      icon: 'stats'
     }
   ];
 

@@ -18,7 +18,8 @@ const routes: Routes = [
   },
   { path: 'logs', loadChildren: './logs/logs.module#LogsPageModule' },
   { path: 'newlog', loadChildren: './newlog/newlog.module#NewlogPageModule' },
-  { path: 'log', loadChildren: './log/log.module#LogPageModule' }
+  { path: 'log', loadChildren: './log/log.module#LogPageModule' },
+  { path: 'stats', loadChildren: './stats/stats.module#StatsPageModule' }
 ];
 
 @NgModule({

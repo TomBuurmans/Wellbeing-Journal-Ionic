@@ -17,7 +17,7 @@ export interface Log {
   };
   notes: string;
   overall: string;
-  substanceUse: boolean;
+  substanceUse: string;
 }
 
 @Component({
