@@ -67,8 +67,8 @@ export class StatsPage implements AfterViewInit {
           if (!this.years.includes(date[2])) {
             yearCount++;
             this.years.push(date[2]);
-            this.monthlyLogCount[yearCount] = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
-            this.monthlyLogOverallSum[yearCount] = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+            this.monthlyLogCount[yearCount] = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
+            this.monthlyLogOverallSum[yearCount] = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
           }
 
           for (let y = 0; y < this.years.length; y++) {
@@ -88,23 +88,19 @@ export class StatsPage implements AfterViewInit {
 
   setChartData() {
     console.log('set data');
-    for (let y=0; y < this.monthlyLogCount.length; y++) {
-      this.chart.data.datasets[y] = []
-      this.chart.data.datasets[y].label = this.years[y];
+    for (let y = 0; y < this.monthlyLogCount.length; y++) {
       const color = this.getRandomColor();
-      this.chart.data.datasets[y].borderColor = color;
-      this.chart.data.datasets[y].backgroundColor = color;
-      this.chart.data.datasets[y].data = [];
+      const dataset = {
+        label: this.years[y],
+        fill: false,
+        borderColor: color,
+        backgroundColor: color,
+        data: []
+      };
       for (let i = 0; i < this.monthlyLogCount[y].length; i++) {
-        // console.log(this.monthlyLogOverallSum[y][i] + '/' + this.monthlyLogCount[y][i] + '=' +
-        //             (this.monthlyLogOverallSum[y][i] / this.monthlyLogCount[y][i]));
-        if (this.monthlyLogCount[i] === 0) {
-          this.chart.data.datasets[y].data.push(0);
-        } else {
-          this.chart.data.datasets[y].data.push((this.monthlyLogOverallSum[y][i] / this.monthlyLogCount[y][i]));
-        }
-        // console.log(this.chart.data.datasets[0].data);
+        dataset.data.push((this.monthlyLogOverallSum[y][i] / this.monthlyLogCount[y][i]));
       }
+      this.chart.data.datasets.push(dataset);
       this.chart.update();
     }
   }
@@ -153,9 +149,9 @@ export class StatsPage implements AfterViewInit {
   }
 
   getRandomColor() {
-    var letters = '0123456789ABCDEF';
-    var color = '#';
-    for (var i = 0; i < 6; i++) {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
       color += letters[Math.floor(Math.random() * 16)];
     }
     return color;

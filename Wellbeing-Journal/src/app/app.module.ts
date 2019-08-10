@@ -23,6 +23,8 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 // import { Chart } from 'chart.js';
 import { environment } from '../environments/environment';
 
+// import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -48,6 +50,7 @@ import { environment } from '../environments/environment';
     UserService,
     UserResolver,
     AuthGuard,
+    // LocalNotifications,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

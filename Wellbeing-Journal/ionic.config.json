@@ -1,5 +1,7 @@
 {
   "name": "Wellbeing-Journal",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

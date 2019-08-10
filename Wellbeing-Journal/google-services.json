@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "651698898308",
+    "firebase_url": "https://wellbeing-journal.firebaseio.com",
+    "project_id": "wellbeing-journal",
+    "storage_bucket": "wellbeing-journal.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:651698898308:android:9788604117ac6941",
+        "android_client_info": {
+          "package_name": "com.firebaseapp.wellbeingjournal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "651698898308-o9mbk6q63mj6mcu68ijh3ids22kcnrbc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyg49ODdtJZmcut3f5rY_hgQNhJpWopN8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "651698898308-o9mbk6q63mj6mcu68ijh3ids22kcnrbc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
