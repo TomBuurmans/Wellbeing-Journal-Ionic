@@ -5,6 +5,8 @@ import { Router, Params } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
+import { EThree } from '@virgilsecurity/e3kit';
+import { EthreeService } from '../app.module';
 
 @Component({
   selector: 'app-newlog',
@@ -20,13 +22,13 @@ export class NewlogPage implements OnInit {
               public db: AngularFirestore,
               public afAuth: AngularFireAuth,
               private router: Router,
-              private alertController: AlertController
+              private alertController: AlertController,
+              public e3Service: EthreeService
     ) {
     this.afAuth.authState.subscribe(user => {
       if (user) { this.userId = user.uid; }
     });
-    this.createForm();
-  }
+    }
 
   createForm() {
     this.logForm = this.fb.group({
@@ -35,16 +37,20 @@ export class NewlogPage implements OnInit {
       fear: ['', Validators.required ],
       joy: ['', Validators.required ],
       sadness: ['', Validators.required ],
-      // surprise: ['', Validators.required ],
       overall: ['', Validators.required ],
       use: ['', Validators.required ],
       notes: ['']
     });
   }
 
-  addLog() {
+  async addLog() {
     const value = this.logForm.value;
     const user = firebase.auth().currentUser;
+    const usersToEncryptTo = [];
+
+    // Lookup user public keys
+    console.log(this.e3Service.eThree);
+    const publicKeys = await this.e3Service.eThree.lookupPublicKeys(usersToEncryptTo);
     const item = {
       emotionLevel: {
         anger: value.anger,
@@ -54,7 +60,8 @@ export class NewlogPage implements OnInit {
         sadness: value.sadness
       },
       overall: value.overall,
-      substanceUse: value.use,
+      substanceUse: await this.e3Service.eThree.encrypt(value.use, publicKeys),
+      // substanceUse: value.use,
       notes: value.notes
     };
     const d = new Date();
@@ -97,6 +104,7 @@ export class NewlogPage implements OnInit {
   }
 
   ngOnInit() {
+    this.createForm();
   }
 
 }

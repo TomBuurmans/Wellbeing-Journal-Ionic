@@ -43,7 +43,7 @@ export class LogsPage implements OnInit {
       const userDoc = this.db.firestore.collection('users').doc(this.userId).collection('logs');
       userDoc.get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          console.log(doc.id, '=>', doc.data());
+          // console.log(doc.id, '=>', doc.data());
           this.logs.push({
             date: doc.id,
             emotionLevel: {

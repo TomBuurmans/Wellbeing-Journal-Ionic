@@ -78,9 +78,9 @@ export class StatsPage implements AfterViewInit {
             }
           }
         });
-        console.log(this.years);
-        console.log(this.monthlyLogOverallSum);
-        console.log(this.monthlyLogCount);
+        // console.log(this.years);
+        // console.log(this.monthlyLogOverallSum);
+        // console.log(this.monthlyLogCount);
         this.setChartData();
       });
     });

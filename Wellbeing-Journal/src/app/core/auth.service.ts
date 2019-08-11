@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Injectable, Inject } from '@angular/core';
+import { EthreeService } from '../app.module';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
@@ -9,43 +9,43 @@ export class AuthService {
 
   constructor(
     public db: AngularFirestore,
-    public afAuth: AngularFireAuth
+    public afAuth: AngularFireAuth,
+    public e3Service: EthreeService
  ) {}
-
-  // doGoogleLogin() {
-  //   return new Promise<any>((resolve, reject) => {
-  //     const provider = new firebase.auth.GoogleAuthProvider();
-  //     provider.addScope('profile');
-  //     provider.addScope('email');
-  //     this.afAuth.auth
-  //     .signInWithPopup(provider)
-  //     .then(res => {
-  //       resolve(res);
-  //     }, err => {
-  //       console.log(err);
-  //       reject(err);
-  //     });
-  //   });
-  // }
 
   doRegister(value: { email: string; name: string; password: string; }) {
     return new Promise<any>((resolve, reject) => {
       firebase.auth().createUserWithEmailAndPassword(value.email, value.password)
       .then(res => {
-        resolve(res);
-        const user = firebase.auth().currentUser;
-        this.db.collection('users').doc(user.uid).set({
-          name: value.name
+        console.log(res);
+        this.e3Service.virgilInit().then(() => {
+          console.log(res);
+          resolve(res);
+          const user = firebase.auth().currentUser;
+          // register user with virgil
+          this.e3Service.eThree.register();
+          // set up firestore user document and logs collection
+          this.db.collection('users').doc(user.uid).set({
+            name: value.name
+          });
+          this.db.collection('users').doc(user.uid).collection('logs');
         });
-        this.db.collection('users').doc(user.uid).collection('logs');
       }, err => reject(err));
     });
   }
 
   doLogin(value: { email: string; password: string; }) {
+    console.log('login');
     return new Promise<any>((resolve, reject) => {
       firebase.auth().signInWithEmailAndPassword(value.email, value.password)
       .then(res => {
+        this.e3Service.virgilInit().then(async () => {
+          // test encrypt
+          console.log(this.e3Service.eThree);
+          const publicKeys = await this.e3Service.eThree.lookupPublicKeys(res.user.uid);
+          let encrypt = await this.e3Service.eThree.encrypt('blah', publicKeys);
+          console.log(encrypt);
+        });
         resolve(res);
       }, err => reject(err));
     });
