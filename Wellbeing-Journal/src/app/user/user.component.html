@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
@@ -17,7 +17,9 @@
     <div class="col-md-4 col-md-offset-4">
       <div class="card" style="width: 20rem;">
         <div *ngIf='user.provider == "password"'class="card-body">
-          <h4 class="card-title">{{user.name}}</h4>
+          <ion-item>
+            <ion-card-header class="card-title">{{user.name}}</ion-card-header>
+          </ion-item>
           <ion-item>
             <ion-button (click)="confirmAlert()" color="danger" expand="block">DELETE ACCOUNT DATA</ion-button>
           </ion-item>
