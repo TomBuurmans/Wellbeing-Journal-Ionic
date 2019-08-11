@@ -2,6 +2,7 @@ import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Chart } from 'chart.js';
+import { AbstractService } from '../abstract.service';
 
 export interface Log {
   date: string;
@@ -32,7 +33,7 @@ export class StatsPage implements AfterViewInit {
   public monthlyLogCount: Array<Array<number>> = [[]];
   public years: Array<string> = [];
 
-  constructor(public db: AngularFirestore, public afAuth: AngularFireAuth) {
+  constructor(public db: AngularFirestore, public afAuth: AngularFireAuth, public e3Service: AbstractService) {
   }
 
   ngAfterViewInit(): void {
@@ -41,54 +42,58 @@ export class StatsPage implements AfterViewInit {
   }
 
   getLogs() {
-    let yearCount = -1;
-    this.afAuth.authState.subscribe( user => {
+    this.afAuth.authState.subscribe(async user => {
       if (user) { this.userId = user.uid; }
-      console.log(this.userId);
-      console.log(this.db.collection('users').doc(this.userId).collection('logs').valueChanges());
-      const userDoc = this.db.firestore.collection('users').doc(this.userId).collection('logs');
-      userDoc.get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          // console.log(doc.id, '=>', doc.data());
-          this.logs.push({
-            date: doc.id,
-            emotionLevel: {
-              anger: doc.data().emotionLevel.anger,
-              disgust: doc.data().emotionLevel.disgust,
-              fear: doc.data().emotionLevel.fear,
-              joy: doc.data().emotionLevel.joy,
-              sadness: doc.data().emotionLevel.sadness
-            },
-            notes: doc.data().notes,
-            overall: doc.data().overall,
-            substanceUse: doc.data().substanceUse
+      await this.e3Service.virgilInit().then(() => {
+        const userDoc = this.db.firestore.collection('users').doc(this.userId).collection('logs');
+        userDoc.get().then((querySnapshot) => {
+          querySnapshot.forEach(async (doc) => {
+            // console.log(doc.id, '=>', doc.data());
+            this.logs.push({
+              date: doc.id,
+              emotionLevel: {
+                anger: await this.e3Service.decrypt(this.userId, doc.data().emotionLevel.anger),
+                disgust: await this.e3Service.decrypt(this.userId, doc.data().emotionLevel.disgust),
+                fear: await this.e3Service.decrypt(this.userId, doc.data().emotionLevel.fear),
+                joy: await this.e3Service.decrypt(this.userId, doc.data().emotionLevel.joy),
+                sadness: await this.e3Service.decrypt(this.userId, doc.data().emotionLevel.sadness)
+              },
+              notes: await this.e3Service.decrypt(this.userId, doc.data().notes),
+              overall: await this.e3Service.decrypt(this.userId, doc.data().overall),
+              substanceUse: await this.e3Service.decrypt(this.userId, doc.data().substanceUse)
+            });
+            console.log(this.logs.length);
+            this.setChartData();
           });
-          const date = doc.id.split('-');
-          if (!this.years.includes(date[2]) && yearCount <= 3) {
-            yearCount++;
-            this.years.push(date[2]);
-            this.monthlyLogCount[yearCount] = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
-            this.monthlyLogOverallSum[yearCount] = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
-          }
-
-          for (let y = 0; y < this.years.length; y++) {
-            if (date[2] === this.years[y]) {
-              this.monthlyLogCount[y][parseInt(date[1], 10) - 1]++;
-              this.monthlyLogOverallSum[y][parseInt(date[1], 10) - 1] += parseInt(doc.data().overall, 10);
-            }
-          }
+          // console.log(this.years);
+          // console.log(this.monthlyLogOverallSum);
+          // console.log(this.monthlyLogCount);
         });
-        console.log(this.years);
-        console.log(this.monthlyLogOverallSum);
-        console.log(this.monthlyLogCount);
-        this.setChartData();
       });
     });
   }
 
   setChartData() {
     console.log('set data');
-    for (let y = 0; y < this.monthlyLogCount.length; y++) {
+    let yearCount = -1;
+    for (const i of this.logs) {
+      console.log(i);
+      const date = i.date.split('-');
+      if (!this.years.includes(date[2]) && yearCount <= 3) {
+        yearCount++;
+        this.years.push(date[2]);
+        this.monthlyLogCount[yearCount] = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
+        this.monthlyLogOverallSum[yearCount] = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
+      }
+
+      for (let y = 0; y < this.years.length; y++) {
+        if (date[2] === this.years[y]) {
+          this.monthlyLogCount[y][parseInt(date[1], 10) - 1]++;
+          this.monthlyLogOverallSum[y][parseInt(date[1], 10) - 1] += parseInt(i.overall, 10);
+        }
+      }
+    }
+    for (let y = 0; y < this.years.length; y++) {
       const color = this.getRandomColor();
       const dataset = {
         label: this.years[y],
@@ -102,6 +107,7 @@ export class StatsPage implements AfterViewInit {
       }
       this.chart.data.datasets.push(dataset);
       this.chart.update();
+      console.log(dataset);
     }
   }
 

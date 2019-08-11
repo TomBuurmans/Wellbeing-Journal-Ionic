@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import { OverlayBaseController } from '@ionic/angular/dist/util/overlay';
 import { LoadingController } from '@ionic/angular';
 import { Router, NavigationExtras } from '@angular/router';
+import { AbstractService } from '../abstract.service';
 
 export interface Log {
   date: string;
@@ -25,45 +26,43 @@ export interface Log {
   templateUrl: './logs.page.html',
   styleUrls: ['./logs.page.scss'],
 })
-export class LogsPage implements OnInit {
+export class LogsPage implements AfterViewInit {
 
   @ViewChild('loading', { read: ElementRef }) searchElementRef: ElementRef;
   private selectedItem: any;
   private userId;
   public logs: Array<Log> = [];
   constructor(public db: AngularFirestore, public afAuth: AngularFireAuth, public loadingController: LoadingController,
-              private router: Router) {
+              private router: Router, public e3Service: AbstractService) {
   }
 
   ngAfterViewInit() {
-    this.afAuth.authState.subscribe( user => {
+    this.afAuth.authState.subscribe(async user => {
       if (user) { this.userId = user.uid; }
-      console.log(this.userId);
-      console.log(this.db.collection('users').doc(this.userId).collection('logs').valueChanges());
+      await this.e3Service.virgilInit();
       const userDoc = this.db.firestore.collection('users').doc(this.userId).collection('logs');
-      userDoc.get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          console.log(doc.id, '=>', doc.data());
-          this.logs.push({
+      userDoc.get().then(async (querySnapshot) => {
+        querySnapshot.forEach(async (doc) => {
+          // console.log(doc.id, '=>', doc.data());
+          await this.logs.push({
             date: doc.id,
             emotionLevel: {
-              anger: doc.data().emotionLevel.anger,
-              disgust: doc.data().emotionLevel.disgust,
-              fear: doc.data().emotionLevel.fear,
-              joy: doc.data().emotionLevel.joy,
-              sadness: doc.data().emotionLevel.sadness
+              anger: await this.e3Service.decrypt(this.userId, doc.data().emotionLevel.anger),
+              disgust: await this.e3Service.decrypt(this.userId, doc.data().emotionLevel.disgust),
+              fear: await this.e3Service.decrypt(this.userId, doc.data().emotionLevel.fear),
+              joy: await this.e3Service.decrypt(this.userId, doc.data().emotionLevel.joy),
+              sadness: await this.e3Service.decrypt(this.userId, doc.data().emotionLevel.sadness)
             },
-            notes: doc.data().notes,
-            overall: doc.data().overall,
-            substanceUse: doc.data().substanceUse
+            notes: await this.e3Service.decrypt(this.userId, doc.data().notes),
+            overall: await this.e3Service.decrypt(this.userId, doc.data().overall),
+            substanceUse: await this.e3Service.decrypt(this.userId, doc.data().substanceUse)
           });
         });
+      }).then(() => {
+        // hide loading spinner
         this.searchElementRef.nativeElement.style.display = 'none';
       });
     });
-  }
-
-  ngOnInit() {
   }
 
   clickLog(item) {

@@ -5,6 +5,7 @@ import { Router, Params } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
+import { AbstractService } from '../abstract.service';
 
 @Component({
   selector: 'app-newlog',
@@ -20,13 +21,13 @@ export class NewlogPage implements OnInit {
               public db: AngularFirestore,
               public afAuth: AngularFireAuth,
               private router: Router,
-              private alertController: AlertController
+              private alertController: AlertController,
+              public e3Service: AbstractService
     ) {
     this.afAuth.authState.subscribe(user => {
       if (user) { this.userId = user.uid; }
     });
-    this.createForm();
-  }
+    }
 
   createForm() {
     this.logForm = this.fb.group({
@@ -35,27 +36,29 @@ export class NewlogPage implements OnInit {
       fear: ['', Validators.required ],
       joy: ['', Validators.required ],
       sadness: ['', Validators.required ],
-      // surprise: ['', Validators.required ],
       overall: ['', Validators.required ],
       use: ['', Validators.required ],
       notes: ['']
     });
   }
 
-  addLog() {
+  async addLog() {
     const value = this.logForm.value;
     const user = firebase.auth().currentUser;
+
+    await this.e3Service.virgilInit();
     const item = {
       emotionLevel: {
-        anger: value.anger,
-        disgust: value.disgust,
-        fear: value.fear,
-        joy: value.joy,
-        sadness: value.sadness
+        anger: await this.e3Service.encrypt(this.userId, value.anger),
+        disgust: await this.e3Service.encrypt(this.userId, value.disgust),
+        fear: await this.e3Service.encrypt(this.userId, value.fear),
+        joy: await this.e3Service.encrypt(this.userId, value.joy),
+        sadness: await this.e3Service.encrypt(this.userId, value.sadness)
       },
-      overall: value.overall,
-      substanceUse: value.use,
-      notes: value.notes
+      overall: await this.e3Service.encrypt(this.userId, value.overall),
+      substanceUse: await this.e3Service.encrypt(this.userId, value.use),
+      // substanceUse: value.use,
+      notes: await this.e3Service.encrypt(this.userId, value.notes)
     };
     const d = new Date();
     const s = d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getFullYear();
@@ -97,6 +100,7 @@ export class NewlogPage implements OnInit {
   }
 
   ngOnInit() {
+    this.createForm();
   }
 
 }

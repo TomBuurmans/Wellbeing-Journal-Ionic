@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { UserService } from '../core/user.service';
-import { AuthService } from '../core/auth.service';
+import { AbstractService } from '../abstract.service';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { Router, Params } from '@angular/router';
@@ -23,8 +22,8 @@ export class UserComponent implements OnInit {
   userId;
 
   constructor(
-    public userService: UserService,
-    public authService: AuthService,
+    public userService: AbstractService,
+    public authService: AbstractService,
     private route: ActivatedRoute,
     private location: Location,
     private fb: FormBuilder,
