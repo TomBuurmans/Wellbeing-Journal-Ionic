@@ -1,29 +1,31 @@
-import * as firebase from 'firebase/app';
-require('firebase/functions');
-import { EThree } from '@virgilsecurity/e3kit';
-import { Injectable } from '@angular/core';
+// DEPRECATED: NOW INCLUDED IN ABSTRACT SERVICE
 
-@Injectable()
-export class EthreeService {
+// import * as firebase from 'firebase/app';
+// require('firebase/functions');
+// import { EThree } from '@virgilsecurity/e3kit';
+// import { Injectable } from '@angular/core';
 
-  public eThree;
+// @Injectable()
+// export class EthreeService {
 
-  constructor() {
-  }
+//   public eThree;
 
-  async virgilInit() {
-    const getToken = firebase.functions().httpsCallable('getVirgilJwt');
-    const initializeFunction = () => getToken().then(result => result.data.token);
-    await EThree.initialize(initializeFunction).then(eThree => {
-        // Initialize done
-        // Save the eThree instance
-        this.eThree = eThree;
-        console.log(this.eThree);
-    }).catch(error => {
-        // Error handling
-        const code = error.code;
-        // code === 'unauthenticated' if user not authenticated
-    });
-  }
+//   constructor() {
+//   }
 
-}
+//   async virgilInit() {
+//     const getToken = firebase.functions().httpsCallable('getVirgilJwt');
+//     const initializeFunction = () => getToken().then(result => result.data.token);
+//     await EThree.initialize(initializeFunction).then(eThree => {
+//         // Initialize done
+//         // Save the eThree instance
+//         this.eThree = eThree;
+//         console.log(this.eThree);
+//     }).catch(error => {
+//         // Error handling
+//         const code = error.code;
+//         // code === 'unauthenticated' if user not authenticated
+//     });
+//   }
+
+// }

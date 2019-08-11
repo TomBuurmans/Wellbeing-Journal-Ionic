@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../core/auth.service';
-import { UserService } from '../core/user.service';
+import { AbstractService } from '../abstract.service';
 import { Router, Params } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -16,8 +15,8 @@ export class RegisterComponent {
   successMessage = '';
 
   constructor(
-    public userService: UserService,
-    public authService: AuthService,
+    public userService: AbstractService,
+    public authService: AbstractService,
     private router: Router,
     private fb: FormBuilder
   ) {

@@ -5,8 +5,7 @@ import { Router, Params } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
-import { EThree } from '@virgilsecurity/e3kit';
-import { EthreeService } from '../app.module';
+import { AbstractService } from '../abstract.service';
 
 @Component({
   selector: 'app-newlog',
@@ -23,7 +22,7 @@ export class NewlogPage implements OnInit {
               public afAuth: AngularFireAuth,
               private router: Router,
               private alertController: AlertController,
-              public e3Service: EthreeService
+              public e3Service: AbstractService
     ) {
     this.afAuth.authState.subscribe(user => {
       if (user) { this.userId = user.uid; }
@@ -46,23 +45,20 @@ export class NewlogPage implements OnInit {
   async addLog() {
     const value = this.logForm.value;
     const user = firebase.auth().currentUser;
-    const usersToEncryptTo = [];
 
-    // Lookup user public keys
-    console.log(this.e3Service.eThree);
-    const publicKeys = await this.e3Service.eThree.lookupPublicKeys(usersToEncryptTo);
+    await this.e3Service.virgilInit();
     const item = {
       emotionLevel: {
-        anger: value.anger,
-        disgust: value.disgust,
-        fear: value.fear,
-        joy: value.joy,
-        sadness: value.sadness
+        anger: await this.e3Service.encrypt(this.userId, value.anger),
+        disgust: await this.e3Service.encrypt(this.userId, value.disgust),
+        fear: await this.e3Service.encrypt(this.userId, value.fear),
+        joy: await this.e3Service.encrypt(this.userId, value.joy),
+        sadness: await this.e3Service.encrypt(this.userId, value.sadness)
       },
-      overall: value.overall,
-      substanceUse: await this.e3Service.eThree.encrypt(value.use, publicKeys),
+      overall: await this.e3Service.encrypt(this.userId, value.overall),
+      substanceUse: await this.e3Service.encrypt(this.userId, value.use),
       // substanceUse: value.use,
-      notes: value.notes
+      notes: await this.e3Service.encrypt(this.userId, value.notes)
     };
     const d = new Date();
     const s = d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getFullYear();
