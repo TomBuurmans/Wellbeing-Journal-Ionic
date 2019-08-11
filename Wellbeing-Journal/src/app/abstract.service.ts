@@ -24,10 +24,7 @@ export class AbstractService {
     return new Promise<any>((resolve, reject) => {
       const user = firebase.auth().onAuthStateChanged((u) => {
         if (u) {
-          this.virgilInit().then(async () => {
-            // test encrypt
-            console.log(this.eThree);
-          });
+          this.virgilInit();
           resolve(u);
         } else {
           reject('No user logged in');
@@ -53,13 +50,14 @@ export class AbstractService {
     return new Promise<any>((resolve, reject) => {
       firebase.auth().createUserWithEmailAndPassword(value.email, value.password)
       .then(res => {
-        console.log(res);
-        this.virgilInit().then(() => {
-          console.log(res);
+        this.virgilInit().then(async () => {
           resolve(res);
           const user = firebase.auth().currentUser;
           // register user with virgil
-          this.eThree.register();
+          await this.eThree.register();
+          this.eThree.backupPrivateKey(user.uid)
+          .then(() => console.log('key backup success'))
+          .catch(e => console.error('error: ', e));
           // set up firestore user document and logs collection
           this.db.collection('users').doc(user.uid).set({
             name: value.name
@@ -74,9 +72,11 @@ export class AbstractService {
     console.log('login');
     return new Promise<any>((resolve, reject) => {
       firebase.auth().signInWithEmailAndPassword(value.email, value.password)
-      .then(res => {
+      .then(async res => {
         this.virgilInit().then(async () => {
-          console.log(this.eThree);
+          this.eThree.hasLocalPrivateKey().then(hasLocalPrivateKey => {
+            if (!hasLocalPrivateKey) {this.eThree.restorePrivateKey(res.user.uid); }
+        });
         });
         resolve(res);
       }, err => reject(err));
@@ -103,31 +103,21 @@ export class AbstractService {
         // Initialize done
         // Save the eThree instance
         this.eThree = eThree;
-        console.log(this.eThree);
-        // const e = await this.encrypt(firebase.auth().currentUser.uid, 'test');
-        // const d = await this.decrypt(firebase.auth().currentUser.uid, e);
     }).catch(error => {
         // Error handling
         const code = error.code;
-        // code === 'unauthenticated' if user not authenticated
     });
   }
 
   async encrypt(userId, text) {
-    console.log('encrypt');
-    console.log(text);
     const publicKeys = await this.eThree.lookupPublicKeys(userId);
     const encrypted = await this.eThree.encrypt(text);
-    console.log(encrypted);
     return encrypted;
   }
 
   async decrypt(userId, text) {
-    console.log('decrypt');
-    console.log(text);
     const publicKey = await this.eThree.lookupPublicKeys(userId);
     const decrypted = await this.eThree.decrypt(text, publicKey);
-    console.log(decrypted);
     return decrypted;
   }
   // end ethree service

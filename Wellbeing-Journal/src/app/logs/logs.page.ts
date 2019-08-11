@@ -39,14 +39,12 @@ export class LogsPage implements AfterViewInit {
   ngAfterViewInit() {
     this.afAuth.authState.subscribe(async user => {
       if (user) { this.userId = user.uid; }
-      // console.log(this.userId);
-      // console.log(this.db.collection('users').doc(this.userId).collection('logs').valueChanges());
       await this.e3Service.virgilInit();
       const userDoc = this.db.firestore.collection('users').doc(this.userId).collection('logs');
-      userDoc.get().then((querySnapshot) => {
+      userDoc.get().then(async (querySnapshot) => {
         querySnapshot.forEach(async (doc) => {
-          console.log(doc.id, '=>', doc.data());
-          this.logs.push({
+          // console.log(doc.id, '=>', doc.data());
+          await this.logs.push({
             date: doc.id,
             emotionLevel: {
               anger: await this.e3Service.decrypt(this.userId, doc.data().emotionLevel.anger),
@@ -60,6 +58,8 @@ export class LogsPage implements AfterViewInit {
             substanceUse: await this.e3Service.decrypt(this.userId, doc.data().substanceUse)
           });
         });
+      }).then(() => {
+        // hide loading spinner
         this.searchElementRef.nativeElement.style.display = 'none';
       });
     });
