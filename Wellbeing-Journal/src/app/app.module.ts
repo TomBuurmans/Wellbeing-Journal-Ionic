@@ -15,13 +15,16 @@ import { RegisterComponent } from './register/register.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UserResolver } from './user/user.resolver';
 import { AuthGuard } from './core/auth.guard';
-import { AuthService } from './core/auth.service';
-import { UserService } from './core/user.service';
+// import { AuthService } from './core/auth.service';
+// import { UserService } from './core/user.service';
+// import { EthreeService } from './core/ethree.service';
+import { AbstractService } from './abstract.service';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 // import { Chart } from 'chart.js';
 import { environment } from '../environments/environment';
+// import { EThree } from '@virgilsecurity/e3kit';
 
 // import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 
@@ -46,8 +49,9 @@ import { environment } from '../environments/environment';
   providers: [
     StatusBar,
     SplashScreen,
-    AuthService,
-    UserService,
+    // AuthService,
+    // UserService,
+    AbstractService,
     UserResolver,
     AuthGuard,
     // LocalNotifications,
