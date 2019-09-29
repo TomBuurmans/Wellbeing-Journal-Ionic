@@ -1,8 +1,8 @@
 import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { AngularFireAuth } from '@angular/fire/auth';
 import { Chart } from 'chart.js';
 import { AbstractService } from '../abstract.service';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 export interface Log {
   date: string;
@@ -33,7 +33,9 @@ export class StatsPage implements AfterViewInit {
   public monthlyLogCount: Array<Array<number>> = [[]];
   public years: Array<string> = [];
 
-  constructor(public db: AngularFirestore, public afAuth: AngularFireAuth, public e3Service: AbstractService) {
+  constructor(public e3Service: AbstractService,
+              public db: AngularFirestore,
+              public afAuth: AngularFireAuth) {
   }
 
   ngAfterViewInit(): void {
@@ -42,11 +44,11 @@ export class StatsPage implements AfterViewInit {
   }
 
   getLogs() {
-    this.afAuth.authState.subscribe(async user => {
+    this.afAuth.auth.onAuthStateChanged(async user => {
       if (user) { this.userId = user.uid; }
       await this.e3Service.virgilInit().then(() => {
-        const userDoc = this.db.firestore.collection('users').doc(this.userId).collection('logs');
-        userDoc.get().then((querySnapshot) => {
+        const userDoc = this.db.collection('users').doc(this.userId).collection('logs');
+        userDoc.get().toPromise().then((querySnapshot) => {
           querySnapshot.forEach(async (doc) => {
             // console.log(doc.id, '=>', doc.data());
             this.logs.push({

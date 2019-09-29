@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AlertController } from '@ionic/angular';
-import { Router, Params } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
-import * as firebase from 'firebase/app';
+import { Router, Params } from '@angular/router';
 import { AbstractService } from '../abstract.service';
 
 @Component({
@@ -18,13 +17,13 @@ export class NewlogPage implements OnInit {
   userId;
 
   constructor(private fb: FormBuilder,
-              public db: AngularFirestore,
-              public afAuth: AngularFireAuth,
               private router: Router,
               private alertController: AlertController,
-              public e3Service: AbstractService
+              public e3Service: AbstractService,
+              public db: AngularFirestore,
+              public afAuth: AngularFireAuth
     ) {
-    this.afAuth.authState.subscribe(user => {
+    this.afAuth.auth.onAuthStateChanged(user => {
       if (user) { this.userId = user.uid; }
     });
     }
@@ -44,7 +43,7 @@ export class NewlogPage implements OnInit {
 
   async addLog() {
     const value = this.logForm.value;
-    const user = firebase.auth().currentUser;
+    const user = this.afAuth.auth.currentUser;
 
     await this.e3Service.virgilInit();
     const item = {
@@ -70,7 +69,7 @@ export class NewlogPage implements OnInit {
   async checkOverwriteAlert() {
     const d = new Date();
     const s = d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getFullYear();
-    const userDoc = this.db.firestore.collection('users').doc(this.userId).collection('logs').doc(s).get().then(async docSnapshot => {
+    const userDoc = this.db.collection('users').doc(this.userId).collection('logs').doc(s).get().toPromise().then(async docSnapshot => {
       if (docSnapshot.exists) {
         const alert = await this.alertController.create({
           header: 'Confirm',

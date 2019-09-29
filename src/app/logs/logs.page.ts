@@ -1,8 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
-import * as firebase from 'firebase/app';
-import { OverlayBaseController } from '@ionic/angular/dist/util/overlay';
 import { LoadingController } from '@ionic/angular';
 import { Router, NavigationExtras } from '@angular/router';
 import { AbstractService } from '../abstract.service';
@@ -32,16 +30,16 @@ export class LogsPage implements AfterViewInit {
   private selectedItem: any;
   private userId;
   public logs: Array<Log> = [];
-  constructor(public db: AngularFirestore, public afAuth: AngularFireAuth, public loadingController: LoadingController,
+  constructor(public loadingController: LoadingController, public db: AngularFirestore, public afAuth: AngularFireAuth,
               private router: Router, public e3Service: AbstractService) {
   }
 
   ngAfterViewInit() {
-    this.afAuth.authState.subscribe(async user => {
+    this.afAuth.auth.onAuthStateChanged(async user => {
       if (user) { this.userId = user.uid; }
       await this.e3Service.virgilInit();
-      const userDoc = this.db.firestore.collection('users').doc(this.userId).collection('logs');
-      userDoc.get().then(async (querySnapshot) => {
+      const userDoc = this.db.collection('users').doc(this.userId).collection('logs');
+      userDoc.get().toPromise().then(async (querySnapshot) => {
         querySnapshot.forEach(async (doc) => {
           // console.log(doc.id, '=>', doc.data());
           await this.logs.push({

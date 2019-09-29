@@ -5,10 +5,9 @@ import { Location } from '@angular/common';
 import { Router, Params } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FirebaseUserModel } from '../core/user.model';
+import { AlertController } from '@ionic/angular';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
-import * as firebase from 'firebase/app';
-import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'page-user',
@@ -28,10 +27,10 @@ export class UserComponent implements OnInit {
     private location: Location,
     private fb: FormBuilder,
     private router: Router,
-    public afAuth: AngularFireAuth,
-    public db: AngularFirestore,
     private elRef: ElementRef,
-    private alertController: AlertController
+    private alertController: AlertController,
+    public db: AngularFirestore,
+    public afAuth: AngularFireAuth
   ) {
 
   }
@@ -61,11 +60,11 @@ export class UserComponent implements OnInit {
 
   deleteData() {
     console.log('Deleting data');
-    const userDoc = this.db.firestore.collection('users').doc(this.userId).collection('logs');
-    userDoc.get().then((querySnapshot) => {
+    const userDoc = this.db.collection('users').doc(this.userId).collection('logs');
+    userDoc.get().toPromise().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
           console.log(doc);
-          this.db.doc(doc.ref).delete();
+          this.db.doc(doc.ref.id).delete();
         });
     });
   }
@@ -76,7 +75,7 @@ export class UserComponent implements OnInit {
       if (data) {
         this.user = data;
         // this.createForm(this.user.name);
-        this.afAuth.authState.subscribe( user => {
+        this.afAuth.auth.onAuthStateChanged( user => {
           if (user) { this.userId = user.uid; }
         });
       } else {

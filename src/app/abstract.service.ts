@@ -3,8 +3,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
-import * as firebase from 'firebase/app';
-require('firebase/functions');
+import { AngularFireFunctions } from '@angular/fire/functions';
 import { EThree } from '@virgilsecurity/e3kit';
 
 @Injectable()
@@ -13,16 +12,16 @@ export class AbstractService {
   public eThree;
 
   constructor(
-   public db: AngularFirestore,
-   public afAuth: AngularFireAuth
-  ) {
-  }
+    public db: AngularFirestore,
+    public afAuth: AngularFireAuth,
+    public afFunction: AngularFireFunctions
+   ) {}
 
   // user service
   getCurrentUser() {
     console.log('get user');
     return new Promise<any>((resolve, reject) => {
-      const user = firebase.auth().onAuthStateChanged((u) => {
+      const user = this.afAuth.authState.subscribe((u) => {
         if (u) {
           this.virgilInit();
           resolve(u);
@@ -35,7 +34,7 @@ export class AbstractService {
 
   updateCurrentUser(value) {
     return new Promise<any>((resolve, reject) => {
-      const user = firebase.auth().currentUser;
+      const user = this.afAuth.auth.currentUser;
       user.updateProfile({
         displayName: value.name
       }).then(res => {
@@ -48,11 +47,11 @@ export class AbstractService {
   // auth service
   doRegister(value: { email: string; name: string; password: string; }) {
     return new Promise<any>((resolve, reject) => {
-      firebase.auth().createUserWithEmailAndPassword(value.email, value.password)
+      this.afAuth.auth.createUserWithEmailAndPassword(value.email, value.password)
       .then(res => {
         this.virgilInit().then(async () => {
           resolve(res);
-          const user = firebase.auth().currentUser;
+          const user = this.afAuth.auth.currentUser;
           // register user with virgil
           await this.eThree.register();
           this.eThree.backupPrivateKey(user.uid)
@@ -71,7 +70,7 @@ export class AbstractService {
   doLogin(value: { email: string; password: string; }) {
     console.log('login');
     return new Promise<any>((resolve, reject) => {
-      firebase.auth().signInWithEmailAndPassword(value.email, value.password)
+      this.afAuth.auth.signInWithEmailAndPassword(value.email, value.password)
       .then(async res => {
         this.virgilInit().then(async () => {
           this.eThree.hasLocalPrivateKey().then(hasLocalPrivateKey => {
@@ -85,7 +84,7 @@ export class AbstractService {
 
   doLogout() {
     return new Promise((resolve, reject) => {
-      if (firebase.auth().currentUser) {
+      if (this.afAuth.auth.currentUser) {
         this.afAuth.auth.signOut();
         resolve();
       } else {
@@ -97,7 +96,7 @@ export class AbstractService {
 
   // ethree service
   async virgilInit() {
-    const getToken = firebase.functions().httpsCallable('getVirgilJwt');
+    const getToken = this.afFunction.functions.httpsCallable('getVirgilJwt');
     const initializeFunction = () => getToken().then(result => result.data.token);
     await EThree.initialize(initializeFunction).then(async eThree => {
         // Initialize done

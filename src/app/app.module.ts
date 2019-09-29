@@ -22,6 +22,7 @@ import { AbstractService } from './abstract.service';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFireFunctionsModule } from '@angular/fire/functions';
 // import { Chart } from 'chart.js';
 import { environment } from '../environments/environment';
 // import { EThree } from '@virgilsecurity/e3kit';
@@ -40,6 +41,7 @@ import { environment } from '../environments/environment';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFirestoreModule,
+    AngularFireFunctionsModule,
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
