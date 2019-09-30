@@ -16,9 +16,9 @@ const routes: Routes = [
     path: 'home',
     loadChildren: './home/home.module#HomePageModule'
   },
-  { path: 'logs', loadChildren: './logs/logs.module#LogsPageModule' },
-  { path: 'newlog', loadChildren: './newlog/newlog.module#NewlogPageModule' },
-  { path: 'log', loadChildren: './log/log.module#LogPageModule' },
+  { path: 'journal', loadChildren: './journal/journal.module#JournalPageModule' },
+  { path: 'newentry', loadChildren: './newentry/newentry.module#NewEntryPageModule' },
+  { path: 'entry', loadChildren: './entry/entry.module#EntryPageModule' },
   { path: 'stats', loadChildren: './stats/stats.module#StatsPageModule' }
 ];
 

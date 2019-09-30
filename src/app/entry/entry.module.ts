@@ -8,12 +8,12 @@ import { far } from '@fortawesome/free-regular-svg-icons';
 
 import { IonicModule } from '@ionic/angular';
 
-import { LogPage } from './log.page';
+import { EntryPage } from './entry.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: LogPage
+    component: EntryPage
   }
 ];
 
@@ -25,9 +25,9 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     FontAwesomeModule
   ],
-  declarations: [LogPage]
+  declarations: [EntryPage]
 })
-export class LogPageModule {
+export class EntryPageModule {
   constructor(private faIconService: FaIconService) {
     this.faIconService.defaultPrefix = 'far';
     library.add(far);

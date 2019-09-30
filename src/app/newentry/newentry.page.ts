@@ -7,11 +7,11 @@ import { Router, Params } from '@angular/router';
 import { AbstractService } from '../abstract.service';
 
 @Component({
-  selector: 'app-newlog',
-  templateUrl: './newlog.page.html',
-  styleUrls: ['./newlog.page.scss'],
+  selector: 'app-newentry',
+  templateUrl: './newentry.page.html',
+  styleUrls: ['./newentry.page.scss'],
 })
-export class NewlogPage implements OnInit {
+export class NewEntryPage implements OnInit {
 
   logForm: FormGroup;
   userId;

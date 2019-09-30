@@ -2,11 +2,11 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-log',
-  templateUrl: './log.page.html',
-  styleUrls: ['./log.page.scss'],
+  selector: 'app-entry',
+  templateUrl: './entry.page.html',
+  styleUrls: ['./entry.page.scss'],
 })
-export class LogPage implements OnInit {
+export class EntryPage implements OnInit {
 
   @ViewChild('icon', { read: ElementRef }) searchElementRef: ElementRef;
   public log;

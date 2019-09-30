@@ -8,12 +8,12 @@ import { far } from '@fortawesome/free-regular-svg-icons';
 
 import { IonicModule } from '@ionic/angular';
 
-import { NewlogPage } from './newlog.page';
+import { NewEntryPage } from './newentry.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: NewlogPage
+    component: NewEntryPage
   }
 ];
 
@@ -26,9 +26,9 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     FontAwesomeModule
   ],
-  declarations: [NewlogPage]
+  declarations: [NewEntryPage]
 })
-export class NewlogPageModule {
+export class NewEntryPageModule {
   constructor() {
     library.add(far);
   }

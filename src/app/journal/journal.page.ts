@@ -20,11 +20,11 @@ export interface Log {
 }
 
 @Component({
-  selector: 'app-logs',
-  templateUrl: './logs.page.html',
-  styleUrls: ['./logs.page.scss'],
+  selector: 'app-journal',
+  templateUrl: './journal.page.html',
+  styleUrls: ['./journal.page.scss'],
 })
-export class LogsPage implements AfterViewInit {
+export class JournalPage implements AfterViewInit {
 
   @ViewChild('loading', { read: ElementRef }) searchElementRef: ElementRef;
   private selectedItem: any;
@@ -70,7 +70,7 @@ export class LogsPage implements AfterViewInit {
         log: item
       }
     };
-    this.router.navigate(['log'], navigationExtras);
+    this.router.navigate(['entry'], navigationExtras);
   }
 
 }

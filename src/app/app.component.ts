@@ -12,28 +12,6 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
   templateUrl: 'app.component.html'
 })
 export class AppComponent {
-  public appPages = [
-    {
-      title: 'Welcome',
-      url: '/home',
-      icon: 'home'
-    },
-    {
-      title: 'Account',
-      url: '/user',
-      icon: 'person'
-    },
-    {
-      title: 'Logs',
-      url: '/logs',
-      icon: 'list'
-    },
-    {
-      title: 'Stats',
-      url: '/stats',
-      icon: 'stats'
-    }
-  ];
 
   // scheduled = [];
 
