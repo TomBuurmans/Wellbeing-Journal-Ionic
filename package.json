@@ -35,6 +35,8 @@
     "@virgilsecurity/e3kit": "^0.5.0",
     "chart.js": "^2.8.0",
     "cordova-android": "8.1.0",
+    "cordova-plugin-androidx": "^1.0.2",
+    "cordova-plugin-androidx-adapter": "^1.1.0",
     "cordova-plugin-badge": "^0.8.8",
     "cordova-plugin-fcm-with-dependecy-updated": "^3.2.0",
     "cordova-plugin-firebase-lib": "^5.1.1",
@@ -96,7 +98,9 @@
         "GRADLE_TOOLS_VERSION": "3.5.0",
         "GOOGLE_SERVICES_VERSION": "4.1.0"
       },
-      "cordova-plugin-firebase-lib": {}
+      "cordova-plugin-firebase-lib": {},
+      "cordova-plugin-androidx": {},
+      "cordova-plugin-androidx-adapter": {}
     },
     "platforms": [
       "android"
