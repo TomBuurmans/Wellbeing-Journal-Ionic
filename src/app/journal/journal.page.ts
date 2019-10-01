@@ -24,7 +24,7 @@ export interface Log {
   templateUrl: './journal.page.html',
   styleUrls: ['./journal.page.scss'],
 })
-export class JournalPage implements AfterViewInit {
+export class JournalPage implements OnInit {
 
   @ViewChild('loading', { read: ElementRef }) searchElementRef: ElementRef;
   private selectedItem: any;
@@ -34,10 +34,20 @@ export class JournalPage implements AfterViewInit {
               private router: Router, public e3Service: AbstractService) {
   }
 
-  ngAfterViewInit() {
+  ngOnInit() {
+    if (this.e3Service) {
+      this.loadJournal();
+    } else {
+      this.e3Service.virgilInit().then(() => {
+        this.loadJournal();
+      });
+    }
+  }
+
+  loadJournal() {
     this.afAuth.auth.onAuthStateChanged(async user => {
       if (user) { this.userId = user.uid; }
-      await this.e3Service.virgilInit();
+      // await this.e3Service.virgilInit();
       const userDoc = this.db.collection('users').doc(this.userId).collection('logs');
       userDoc.get().toPromise().then(async (querySnapshot) => {
         querySnapshot.forEach(async (doc) => {

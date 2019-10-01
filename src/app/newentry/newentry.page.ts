@@ -45,7 +45,7 @@ export class NewEntryPage implements OnInit {
     const value = this.logForm.value;
     const user = this.afAuth.auth.currentUser;
 
-    await this.e3Service.virgilInit();
+    // await this.e3Service.virgilInit();
     const item = {
       emotionLevel: {
         anger: await this.e3Service.encrypt(this.userId, value.anger),
@@ -63,7 +63,7 @@ export class NewEntryPage implements OnInit {
     const s = d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getFullYear();
     console.log(s);
     this.db.collection('users').doc(user.uid).collection('logs').doc(s).set(item);
-    this.router.navigate(['/logs']);
+    this.router.navigate(['/journal']);
   }
 
   async checkOverwriteAlert() {

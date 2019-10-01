@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Chart } from 'chart.js';
 import { AbstractService } from '../abstract.service';
 import { AngularFirestore } from '@angular/fire/firestore';
@@ -23,7 +23,7 @@ export interface Log {
   templateUrl: './stats.page.html',
   styleUrls: ['./stats.page.scss'],
 })
-export class StatsPage implements AfterViewInit {
+export class StatsPage implements OnInit {
 
   @ViewChild('chart', { read: ElementRef }) searchElementRef: ElementRef;
   chart: Chart;
@@ -38,15 +38,22 @@ export class StatsPage implements AfterViewInit {
               public afAuth: AngularFireAuth) {
   }
 
-  ngAfterViewInit(): void {
-    this.getLogs();
-    this.createChart();
+  ngOnInit(): void {
+    if (this.e3Service) {
+      this.getLogs();
+      this.createChart();
+    } else {
+      this.e3Service.virgilInit().then(() => {
+        this.getLogs();
+        this.createChart();
+      });
+    }
   }
 
   getLogs() {
     this.afAuth.auth.onAuthStateChanged(async user => {
-      if (user) { this.userId = user.uid; }
-      await this.e3Service.virgilInit().then(() => {
+      if (user) {
+        this.userId = user.uid;
         const userDoc = this.db.collection('users').doc(this.userId).collection('logs');
         userDoc.get().toPromise().then((querySnapshot) => {
           querySnapshot.forEach(async (doc) => {
@@ -67,11 +74,8 @@ export class StatsPage implements AfterViewInit {
             console.log(this.logs.length);
             this.setChartData();
           });
-          // console.log(this.years);
-          // console.log(this.monthlyLogOverallSum);
-          // console.log(this.monthlyLogCount);
         });
-      });
+      }
     });
   }
 

@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { Platform, ToastController, AlertController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { AbstractService } from './abstract.service';
 
 // import { LocalNotifications, ELocalNotificationTriggerUnit,
 //   ILocalNotificationActionType, ILocalNotification } from '@ionic-native/local-notifications/ngx';
@@ -19,7 +20,8 @@ export class AppComponent {
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
-    public toastController: ToastController
+    public toastController: ToastController,
+    public e3Service: AbstractService
     // private localNotifications: LocalNotifications,
     // public alertCtrl: AlertController
   ) {
@@ -33,8 +35,8 @@ export class AppComponent {
   }
 
   initializeApp() {
-    this.platform.ready().then(() => {
-      this.statusBar.styleDefault();
+    this.platform.ready().then(async () => {
+      this.statusBar.styleLightContent();
       this.splashScreen.hide();
       // this.repeatingDaily();
     });

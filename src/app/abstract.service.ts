@@ -23,7 +23,7 @@ export class AbstractService {
     return new Promise<any>((resolve, reject) => {
       const user = this.afAuth.authState.subscribe((u) => {
         if (u) {
-          this.virgilInit();
+          // this.virgilInit();
           resolve(u);
         } else {
           reject('No user logged in');
@@ -58,9 +58,7 @@ export class AbstractService {
           .then(() => console.log('key backup success'))
           .catch(e => console.error('error: ', e));
           // set up firestore user document and logs collection
-          this.db.collection('users').doc(user.uid).set({
-            name: value.name
-          });
+          this.afAuth.auth.currentUser.updateProfile({ displayName: value.name });
           this.db.collection('users').doc(user.uid).collection('logs');
         });
       }, err => reject(err));
@@ -96,15 +94,25 @@ export class AbstractService {
 
   // ethree service
   async virgilInit() {
-    const getToken = this.afFunction.functions.httpsCallable('getVirgilJwt');
-    const initializeFunction = () => getToken().then(result => result.data.token);
-    await EThree.initialize(initializeFunction).then(async eThree => {
-        // Initialize done
-        // Save the eThree instance
-        this.eThree = eThree;
-    }).catch(error => {
-        // Error handling
-        const code = error.code;
+    return new Promise<any>((resolve, reject) => {
+      const user = this.afAuth.authState.subscribe(async (u) => {
+        if (u) {
+          const getToken = this.afFunction.functions.httpsCallable('getVirgilJwt');
+          const initializeFunction = () => getToken().then(result => result.data.token);
+          await EThree.initialize(initializeFunction).then(async eThree => {
+              // Initialize done
+              // Save the eThree instance
+              console.log('init e3');
+              this.eThree = eThree;
+          }).catch(error => {
+              // Error handling
+              const code = error.code;
+          });
+          resolve(u);
+        } else {
+          reject('No user logged in');
+        }
+      });
     });
   }
 
