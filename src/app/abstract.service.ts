@@ -6,7 +6,9 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { EThree } from '@virgilsecurity/e3kit';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class AbstractService {
 
   public eThree;
@@ -53,13 +55,13 @@ export class AbstractService {
           resolve(res);
           const user = this.afAuth.auth.currentUser;
           // register user with virgil
-          await this.eThree.register();
-          this.eThree.backupPrivateKey(user.uid)
-          .then(() => console.log('key backup success'))
-          .catch(e => console.error('error: ', e));
-          // set up firestore user document and logs collection
-          this.afAuth.auth.currentUser.updateProfile({ displayName: value.name });
-          this.db.collection('users').doc(user.uid).collection('logs');
+          this.eThree.register().then(() => {
+            this.eThree.backupPrivateKey(user.uid)
+              .then(() => console.log('key backup success'))
+              .catch(e => console.error('error: ', e));
+            // set up firestore user document and logs collection
+            this.db.collection('users').doc(user.uid).collection('logs');
+          });
         });
       }, err => reject(err));
     });
@@ -73,7 +75,7 @@ export class AbstractService {
         this.virgilInit().then(async () => {
           this.eThree.hasLocalPrivateKey().then(hasLocalPrivateKey => {
             if (!hasLocalPrivateKey) {this.eThree.restorePrivateKey(res.user.uid); }
-        });
+          });
         });
         resolve(res);
       }, err => reject(err));
@@ -117,7 +119,7 @@ export class AbstractService {
   }
 
   async encrypt(userId, text) {
-    const publicKeys = await this.eThree.lookupPublicKeys(userId);
+    // const publicKeys = await this.eThree.lookupPublicKeys(userId);
     const encrypted = await this.eThree.encrypt(text);
     return encrypted;
   }

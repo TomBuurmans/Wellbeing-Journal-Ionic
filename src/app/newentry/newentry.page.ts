@@ -100,6 +100,13 @@ export class NewEntryPage implements OnInit {
 
   ngOnInit() {
     this.createForm();
+    // console.log(this.e3Service.eThree);
+    if (this.e3Service.eThree) {
+      console.log('e3 already initialised');
+    } else {
+      this.e3Service.virgilInit().then(() => {
+      });
+    }
   }
 
 }

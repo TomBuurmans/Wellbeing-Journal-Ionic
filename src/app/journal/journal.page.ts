@@ -35,7 +35,8 @@ export class JournalPage implements OnInit {
   }
 
   ngOnInit() {
-    if (this.e3Service) {
+    console.log(this.e3Service.eThree);
+    if (this.e3Service.eThree) {
       this.loadJournal();
     } else {
       this.e3Service.virgilInit().then(() => {

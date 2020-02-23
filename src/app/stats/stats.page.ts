@@ -39,7 +39,8 @@ export class StatsPage implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.e3Service) {
+    console.log(this.e3Service.eThree);
+    if (this.e3Service.eThree) {
       this.getLogs();
       this.createChart();
     } else {

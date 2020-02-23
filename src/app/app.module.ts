@@ -18,7 +18,7 @@ import { AuthGuard } from './core/auth.guard';
 // import { AuthService } from './core/auth.service';
 // import { UserService } from './core/user.service';
 // import { EthreeService } from './core/ethree.service';
-import { AbstractService } from './abstract.service';
+// import { AbstractService } from './abstract.service';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
@@ -53,7 +53,7 @@ import { environment } from '../environments/environment';
     SplashScreen,
     // AuthService,
     // UserService,
-    AbstractService,
+    // AbstractService,
     UserResolver,
     AuthGuard,
     // LocalNotifications,

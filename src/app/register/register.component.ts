@@ -31,14 +31,6 @@ export class RegisterComponent {
      });
    }
 
-  //  tryGoogleLogin() {
-  //    this.authService.doGoogleLogin()
-  //    .then(res => {
-  //      this.router.navigate(['/user']);
-  //    }, err => console.log(err)
-  //    );
-  //  }
-
    tryRegister(value) {
      this.authService.doRegister(value)
      .then(res => {
@@ -46,6 +38,7 @@ export class RegisterComponent {
        this.errorMessage = '';
        this.successMessage = 'Your account has been created';
        this.sendName(value);
+       this.router.navigate(['/home']);
      }, err => {
        console.log(err);
        this.errorMessage = err.message;
@@ -54,10 +47,11 @@ export class RegisterComponent {
    }
 
    sendName(value) {
+    console.log(value);
     this.userService.updateCurrentUser(value)
-    .then(res => {
-      console.log(res);
-    }, err => console.log(err));
+      .then(res => {
+        console.log(res);
+      }, err => console.log(err));
    }
 
 }
